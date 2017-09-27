@@ -21,31 +21,49 @@ class SwipableCellLayouter {
     private var wrapperView: UIView?
     private var containerView: UIView?
 
-    private var cellActionsOriginVisibleWidth: CGFloat = 0
+    private var originSwipePosition: CGFloat = 0
     private var maxActionsVisibleWidth: CGFloat = 0
 
     private var swipeIsFinished = true
 
-    private var cellActionsVisibleWidth: CGFloat = 0 {
+    private var isFullOpenArea = false//XXX need?
+
+    private var swipePosition: CGFloat = 0 {
         didSet {
-            if cellActionsVisibleWidth <= 0 {
-                let isActionsNotOpen = cellActionsVisibleWidth >= -maxActionsVisibleWidth
-                if isActionsNotOpen {
-                    cellTranslationX = cellActionsVisibleWidth * directionFactor
+            print("###SWIPE: \(swipePosition)")//XXX
+            let isActionsOpening = swipePosition <= 0
+
+            if isActionsOpening {
+                let isActionsNotOpen = swipePosition >= -maxActionsVisibleWidth
+                let isReadyToShowFullButton = swipePosition <= -item.view.bounds.width * 0.85
+
+                if isActionsNotOpen || isReadyToShowFullButton {
+                    let value = swipePosition * directionFactor
+
+                    if !isFullOpenArea && isReadyToShowFullButton {
+                        UIView.animate(withDuration: 0.2, animations: {//XXX
+                            self.cellTranslationX = value
+                            self.layoutActions(inFullOpenArea: false)
+                        })
+                    } else {
+                        cellTranslationX = value
+                    }
                 } else {
-                    cellTranslationX = directionFactor * easeOut(value: cellActionsVisibleWidth,
+                    cellTranslationX = directionFactor * easeOut(value: swipePosition,
                                                                  startValue: -maxActionsVisibleWidth,
                                                                  endValue: -item.view.bounds.width,
-                                                                 asymptote: -maxActionsVisibleWidth + -item.view.bounds.width / 5)
+                                                                 asymptote: -maxActionsVisibleWidth + -item.view.bounds.width / 6)
                 }
+
+                isFullOpenArea = isReadyToShowFullButton
             } else {
-                cellTranslationX = directionFactor * easeOut(value: cellActionsVisibleWidth,
+                cellTranslationX = directionFactor * easeOut(value: swipePosition,
                                                              startValue: 0,
                                                              endValue: item.view.bounds.width,
                                                              asymptote: item.view.bounds.width / 4)
             }
 
-            layoutActions()
+            layoutActions(inFullOpenArea: isFullOpenArea)
         }
     }
 
@@ -83,24 +101,30 @@ class SwipableCellLayouter {
 
     func swipe(x: CGFloat) {
         if swipeIsFinished {
-            cellActionsOriginVisibleWidth = cellActionsVisibleWidth
+            originSwipePosition = swipePosition
         }
-        cellActionsVisibleWidth = cellActionsOriginVisibleWidth + x * directionFactor;
+        swipePosition = originSwipePosition + x * directionFactor;
         swipeIsFinished = false
     }
 
     func swipeFinished(withXVelocity velocity: CGFloat) {
+        guard !isFullOpenArea else {
+            performFinishAnimation(toValue: -item.view.bounds.width)
+
+            return
+        }
+
         let maxOffsetForCompletion: CGFloat = item.view.bounds.width * kCompletionOffsetFactor
         let newVisibleActionsWidth: CGFloat
         let isSwipeToOpenActions = (direction == .leftToRight && velocity <= 0) || (direction == .rightToLeft && velocity >= 0)
         if isSwipeToOpenActions {
-            if cellActionsVisibleWidth < -maxOffsetForCompletion {
+            if swipePosition < -maxOffsetForCompletion {
                 newVisibleActionsWidth = -maxActionsVisibleWidth
             } else {
                 newVisibleActionsWidth = 0
             }
         } else {
-            if -maxActionsVisibleWidth - cellActionsVisibleWidth < -maxOffsetForCompletion {
+            if -maxActionsVisibleWidth - swipePosition < -maxOffsetForCompletion {
                 newVisibleActionsWidth = 0
             } else {
                 newVisibleActionsWidth = -maxActionsVisibleWidth
@@ -119,7 +143,7 @@ class SwipableCellLayouter {
     }
 
     private func removeButtonsFromCell() {
-        cellActionsVisibleWidth = 0
+        swipePosition = 0
 
         if let wrapperView = item.view.viewWithTag(kActionsWrapperViewTag) {
             wrapperView.removeFromSuperview()
@@ -149,11 +173,11 @@ class SwipableCellLayouter {
                 layout.setupActionsView()
             }
 
-            layoutActions()
+            layoutActions(inFullOpenArea: false)
         }
     }
 
-    private func layoutActions() {
+    private func layoutActions(inFullOpenArea: Bool) {
         guard let containerView = containerView,
             (cellTranslationX <= 0 && direction == .leftToRight) ||
                 (cellTranslationX >= 0 && direction == .rightToLeft) else {
@@ -170,11 +194,11 @@ class SwipableCellLayouter {
             containerView.frame = CGRect(x: 0, y: 0, width: width, height: item.view.bounds.height)
         }
 
-        layout?.layoutActionsView()
+        layout?.layoutActionsView(inFullOpenArea: inFullOpenArea)
     }
 
     private func performFinishAnimation(toValue value: CGFloat, completion: (() -> Void)? = nil) {
-        guard cellActionsVisibleWidth != value else {
+        guard swipePosition != value else {
             completion?()
             return
         }
@@ -185,7 +209,7 @@ class SwipableCellLayouter {
         }
 
         let animationBlock = { (value: CGFloat) -> Void in
-            self.cellActionsVisibleWidth = value
+            self.swipePosition = value
             self.item.view.layoutIfNeeded()
         }
 

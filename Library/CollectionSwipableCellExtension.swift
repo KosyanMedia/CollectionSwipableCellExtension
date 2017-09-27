@@ -13,7 +13,7 @@ public protocol CollectionSwipableCellLayout: class {
     var actionsView: UIView { get }
     func swipingAreaWidth() -> CGFloat
     func setupActionsView()
-    func layoutActionsView()
+    func layoutActionsView(inFullOpenArea: Bool)
 }
 
 @objc

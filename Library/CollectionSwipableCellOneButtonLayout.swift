@@ -45,7 +45,7 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
         button.addTarget(self, action: #selector(buttonAction(_:)), for: .touchUpInside)
     }
 
-    open func layoutActionsView() {
+    open func layoutActionsView(inFullOpenArea: Bool) {
         guard let container = actionsView.superview else {
             return
         }
