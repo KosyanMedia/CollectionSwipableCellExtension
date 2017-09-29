@@ -14,11 +14,12 @@ public protocol CollectionSwipableCellLayout: class {
     func swipingAreaWidth() -> CGFloat
     func setupActionsView()
     func layoutActionsView(inFullOpenArea: Bool)
+    func cellDidFullOpen()//XXX
 }
 
 @objc
 public protocol CollectionSwipableCellExtensionDelegate: class {
-    func isSwipable(itemAt indexPath: IndexPath) -> Bool
+    func isSwipable(itemAt indexPath: IndexPath) -> Bool//XXX method fo long swipe
     func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout?
 }
 

@@ -14,6 +14,9 @@ private let kButtonDefaultBackgroundColor = UIColor.white
 @objcMembers
 open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCellLayout {
 
+    public var action: (() -> Void)?
+    public var fullOpenAction: (() -> Void)?
+
     public let actionsView = UIView()
 
     public let button = UIButton(type: .system)
@@ -22,17 +25,15 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
 
     private let buttonWidth: CGFloat
     private let insets: UIEdgeInsets
-    private let action: () -> Void
 
     public func swipingAreaWidth() -> CGFloat {
         return buttonWidth + insets.left + insets.right
     }
 
-    public init(buttonWidth: CGFloat, insets: UIEdgeInsets, direction: UIUserInterfaceLayoutDirection, action: @escaping () -> Void) {
+    public init(buttonWidth: CGFloat, insets: UIEdgeInsets, direction: UIUserInterfaceLayoutDirection) {
         self.buttonWidth = buttonWidth
         self.insets = insets
         self.direction = direction
-        self.action = action
 
         button.setTitle(kButtonDefaultTitle, for: .normal)
         button.setBackgroundImage(UIImage(color: kButtonDefaultBackgroundColor), for: .normal)
@@ -63,8 +64,12 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
         button.frame = CGRect(x: actionsView.bounds.width - buttonWidth, y: 0, width: buttonWidth, height: actionsView.bounds.height)
     }
 
+    open func cellDidFullOpen() {
+        fullOpenAction?()//XXX
+    }
+
     @objc private func buttonAction(_ sender: Any) {
-        action()
+        action?()
     }
 
 }

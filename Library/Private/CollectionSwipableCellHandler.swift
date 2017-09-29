@@ -95,9 +95,7 @@ class CollectionSwipableCellHandler: NSObject {
                 return
             }
 
-            let velocity = recognizer.velocity(in: layouterInProgress.item.view)
-
-            layouterInProgress.swipeFinished(withXVelocity: velocity.x)
+            layouterInProgress.swipeFinished()
         default:
             break
         }
