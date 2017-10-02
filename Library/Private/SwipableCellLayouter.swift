@@ -85,7 +85,7 @@ class SwipableCellLayouter {
     func swipeFinished() {
         switch finishType {
         case .fullOpen:
-            performFinishAnimation(toValue:  -item.view.bounds.width, completion: {
+            performFinishAnimation(toValue:  -swipeWidth(), completion: {
                 self.layout?.cellDidFullOpen()
             })
         case .open:
@@ -106,16 +106,14 @@ class SwipableCellLayouter {
 
         switch (swipePosition, cellTranslationX, isOpeningDirection) {
         case (_, _, false): // close
-            print("close")
             cellTranslationX = defaultValue
             supposedFinishType = .close
 
         case (-CGFloat.infinity ... -item.view.bounds.width * 0.75, -CGFloat.infinity ... -maxActionsVisibleWidth, true):// full open
-            print("full open")
             if finishType != .fullOpen {
                 UIView.animate(withDuration: 0.2, animations: {
                     self.cellTranslationX = defaultValue
-                    self.layoutActions(inFullOpenArea: false)
+                    self.layoutActions()
                 })
             } else {
                 cellTranslationX = defaultValue
@@ -123,7 +121,6 @@ class SwipableCellLayouter {
             supposedFinishType = .fullOpen
 
         case (_, -CGFloat.infinity ... -maxActionsVisibleWidth, true):// open with bounce
-            print("bounce open")
             cellTranslationX = directionFactor * easeOut(value: swipePosition,
                                                          startValue: -maxActionsVisibleWidth,
                                                          endValue: -item.view.bounds.width,
@@ -131,17 +128,15 @@ class SwipableCellLayouter {
             supposedFinishType = .open
 
         case (_, -maxActionsVisibleWidth ... 0, true): // open
-            print("open")
             cellTranslationX = defaultValue
             supposedFinishType = .open
 
         default:
-            print("default")
             cellTranslationX = defaultValue
             supposedFinishType = .close
         }
 
-        layoutActions(inFullOpenArea: false)
+        layoutActions()
 
         offsetCollector.add(offset: abs(swipePosition - prevValue), for: supposedFinishType)
 
@@ -189,11 +184,11 @@ class SwipableCellLayouter {
                 layout.setupActionsView()
             }
 
-            layoutActions(inFullOpenArea: false)
+            layoutActions()
         }
     }
 
-    private func layoutActions(inFullOpenArea: Bool) {
+    private func layoutActions() {
         guard let containerView = containerView else {
             return
         }
@@ -208,7 +203,7 @@ class SwipableCellLayouter {
             containerView.frame = CGRect(x: 0, y: 0, width: width, height: item.view.bounds.height)
         }
 
-        layout?.layoutActionsView(inFullOpenArea: inFullOpenArea)
+        layout?.layoutActionsView()
     }
 
     private func performFinishAnimation(toValue value: CGFloat, completion: (() -> Void)? = nil) {
@@ -260,6 +255,10 @@ class SwipableCellLayouter {
         }) { (finished) in
             completion?()
         }
+    }
+
+    private func swipeWidth() -> CGFloat {
+        return item.view.bounds.width + (layout?.swipingAreaInset() ?? 0)
     }
 
     fileprivate var directionFactor: CGFloat {

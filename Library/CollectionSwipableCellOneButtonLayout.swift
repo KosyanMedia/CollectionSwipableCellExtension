@@ -15,7 +15,6 @@ private let kButtonDefaultBackgroundColor = UIColor.white
 open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCellLayout {
 
     public var action: (() -> Void)?
-    public var fullOpenAction: (() -> Void)?
 
     public let actionsView = UIView()
 
@@ -26,14 +25,21 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
     private let buttonWidth: CGFloat
     private let insets: UIEdgeInsets
 
+    private let fullOpenInset: CGFloat
+
     public func swipingAreaWidth() -> CGFloat {
         return buttonWidth + insets.left + insets.right
     }
 
-    public init(buttonWidth: CGFloat, insets: UIEdgeInsets, direction: UIUserInterfaceLayoutDirection) {
+    public func swipingAreaInset() -> CGFloat {
+        return insets.left - fullOpenInset
+    }
+
+    public init(buttonWidth: CGFloat, insets: UIEdgeInsets, direction: UIUserInterfaceLayoutDirection, fullOpenInset: CGFloat = 0 ) {
         self.buttonWidth = buttonWidth
         self.insets = insets
         self.direction = direction
+        self.fullOpenInset = fullOpenInset
 
         button.setTitle(kButtonDefaultTitle, for: .normal)
         button.setBackgroundImage(UIImage(color: kButtonDefaultBackgroundColor), for: .normal)
@@ -46,7 +52,7 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
         button.addTarget(self, action: #selector(buttonAction(_:)), for: .touchUpInside)
     }
 
-    open func layoutActionsView(inFullOpenArea: Bool) {
+    open func layoutActionsView() {
         guard let container = actionsView.superview else {
             return
         }
@@ -54,7 +60,9 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
         let width = container.bounds.width - insets.left - insets.right
         let height = container.bounds.height - insets.top - insets.bottom
 
-        actionsView.frame = CGRect(x: (direction == .leftToRight ? insets.left : insets.right), y: insets.top, width: width, height: height)
+        let originX = direction == .leftToRight ? insets.left : insets.right
+
+        actionsView.frame = CGRect(x: originX, y: insets.top, width: width, height: height)
 
         let fullWidth = swipingAreaWidth() - insets.left - insets.right
 
@@ -65,7 +73,7 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
     }
 
     open func cellDidFullOpen() {
-        fullOpenAction?()//XXX
+        action?()
     }
 
     @objc private func buttonAction(_ sender: Any) {
