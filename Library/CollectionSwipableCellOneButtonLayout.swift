@@ -11,6 +11,7 @@ import Foundation
 private let kButtonDefaultTitle = "Delete"
 private let kButtonDefaultBackgroundColor = UIColor.white
 
+@objcMembers
 open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCellLayout {
 
     public let actionsView = UIView()

@@ -22,6 +22,7 @@ public protocol CollectionSwipableCellExtensionDelegate: class {
     func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout?
 }
 
+@objcMembers
 public class CollectionSwipableCellExtension: NSObject {
 
     public weak var delegate: CollectionSwipableCellExtensionDelegate? {
