@@ -184,9 +184,9 @@ class SwipableCellLayouter {
             let value: CGFloat
         }
 
-        let animationBlock = { [weak self] (value: CGFloat) -> Void in
-            self?.cellActionsVisibleWidth = value
-            self?.item.view.layoutIfNeeded()
+        let animationBlock = { (value: CGFloat) -> Void in
+            self.cellActionsVisibleWidth = value
+            self.item.view.layoutIfNeeded()
         }
 
         UIView.animateKeyframes(withDuration: 0.3, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction, .calculationModeCubic], animations: {

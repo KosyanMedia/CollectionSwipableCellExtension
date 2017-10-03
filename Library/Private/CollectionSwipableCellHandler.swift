@@ -99,7 +99,7 @@ class CollectionSwipableCellHandler: NSObject {
 
             layouterInProgress.swipeFinished(withXVelocity: velocity.x)
         default:
-            break;
+            break
         }
     }
 
