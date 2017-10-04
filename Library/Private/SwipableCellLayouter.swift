@@ -30,6 +30,16 @@ class SwipableCellLayouter {
 
     private let offsetCollector = OffsetCollector()
 
+    private var hapticGeneratorObject: Any?
+    @available(iOS 10.0, *)
+    private var hapticGenerator: UIImpactFeedbackGenerator? {
+        if hapticGeneratorObject == nil {
+            hapticGeneratorObject = UIImpactFeedbackGenerator(style: .medium)
+        }
+
+        return hapticGeneratorObject as? UIImpactFeedbackGenerator
+    }
+
     private var swipePosition: CGFloat = 0 {
         didSet {
             onSwipe(prevValue: oldValue)
@@ -77,6 +87,10 @@ class SwipableCellLayouter {
     func swipe(x: CGFloat) {
         if swipeIsFinished {
             originSwipePosition = swipePosition
+
+            if #available(iOS 10.0, *) {
+                hapticGenerator?.prepare()
+            }
         }
         swipePosition = originSwipePosition + x * directionFactor;
         swipeIsFinished = false
@@ -111,6 +125,10 @@ class SwipableCellLayouter {
 
         case (-CGFloat.infinity ... -item.view.bounds.width * 0.75, -CGFloat.infinity ... -maxActionsVisibleWidth, true):// full open
             if finishType != .fullOpen {
+                if #available(iOS 10.0, *) {
+                    hapticGenerator?.impactOccurred()
+                }
+
                 UIView.animate(withDuration: 0.2, animations: {
                     self.cellTranslationX = defaultValue
                     self.layoutActions()
