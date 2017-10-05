@@ -11,11 +11,13 @@ import Foundation
 @objc
 public protocol CollectionSwipableCellLayout: class {
     var actionsView: UIView { get }
+
     func swipingAreaWidth() -> CGFloat
     func swipingAreaInset() -> CGFloat
     func setupActionsView()
     func layoutActionsView()
     func cellDidFullOpen()
+    func hapticFeedbackIsEnabled() -> Bool
 }
 
 @objc

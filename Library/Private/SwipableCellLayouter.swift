@@ -33,6 +33,10 @@ class SwipableCellLayouter {
     private var hapticGeneratorObject: Any?
     @available(iOS 10.0, *)
     private var hapticGenerator: UIImpactFeedbackGenerator? {
+        guard layout?.hapticFeedbackIsEnabled() == true else {
+            return nil
+        }
+
         if hapticGeneratorObject == nil {
             hapticGeneratorObject = UIImpactFeedbackGenerator(style: .medium)
         }
@@ -104,7 +108,7 @@ class SwipableCellLayouter {
             })
         case .open:
             performFinishAnimation(toValue: -maxActionsVisibleWidth)
-        case .close:
+        case .closed:
             performFinishAnimation(toValue: 0)
         default:
             return
@@ -116,12 +120,12 @@ class SwipableCellLayouter {
     private func onSwipe(prevValue: CGFloat) {
         let isOpeningDirection = swipePosition <= prevValue
         let defaultValue = swipePosition * directionFactor
-        let supposedFinishType: FinishAnimationType
+        let expectedFinishType: FinishAnimationType
 
         switch (swipePosition, cellTranslationX, isOpeningDirection) {
         case (_, _, false): // close
             cellTranslationX = defaultValue
-            supposedFinishType = .close
+            expectedFinishType = .closed
 
         case (-CGFloat.infinity ... -item.view.bounds.width * 0.75, -CGFloat.infinity ... -maxActionsVisibleWidth, true):// full open
             if finishType != .fullOpen {
@@ -136,37 +140,37 @@ class SwipableCellLayouter {
             } else {
                 cellTranslationX = defaultValue
             }
-            supposedFinishType = .fullOpen
+            expectedFinishType = .fullOpen
 
         case (_, -CGFloat.infinity ... -maxActionsVisibleWidth, true):// open with bounce
             cellTranslationX = directionFactor * easeOut(value: swipePosition,
                                                          startValue: -maxActionsVisibleWidth,
                                                          endValue: -item.view.bounds.width,
                                                          asymptote: -maxActionsVisibleWidth + -item.view.bounds.width / 6)
-            supposedFinishType = .open
+            expectedFinishType = .open
 
         case (_, -maxActionsVisibleWidth ... 0, true): // open
             cellTranslationX = defaultValue
-            supposedFinishType = .open
+            expectedFinishType = .open
 
         default:
             cellTranslationX = defaultValue
-            supposedFinishType = .close
+            expectedFinishType = .closed
         }
 
         layoutActions()
 
-        offsetCollector.add(offset: abs(swipePosition - prevValue), for: supposedFinishType)
+        offsetCollector.add(offset: abs(swipePosition - prevValue), for: expectedFinishType)
 
         let limitOffset = item.view.bounds.width * kCompletionOffsetFactor
-        switch (supposedFinishType, offsetCollector.offset(for: supposedFinishType)) {
+        switch (expectedFinishType, offsetCollector.offset(for: expectedFinishType)) {
         case (.fullOpen, _),
              (.open, limitOffset ... CGFloat.infinity),
-             (.close, limitOffset ... CGFloat.infinity):
-            finishType = supposedFinishType
+             (.closed, limitOffset ... CGFloat.infinity):
+            finishType = expectedFinishType
         default:
             if finishType == .undefined {
-                finishType = .close
+                finishType = .closed
             }
         }
     }
@@ -297,7 +301,7 @@ private func easeOut(value: CGFloat, startValue: CGFloat, endValue: CGFloat, asy
 private enum FinishAnimationType {
     case fullOpen
     case open
-    case close
+    case closed
     case undefined
 }
 

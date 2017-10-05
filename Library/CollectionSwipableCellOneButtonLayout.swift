@@ -80,4 +80,8 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
         action?()
     }
 
+    open func hapticFeedbackIsEnabled() -> Bool {
+        return true
+    }
+
 }
