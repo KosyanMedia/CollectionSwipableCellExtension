@@ -127,7 +127,7 @@ class SwipableCellLayouter {
             cellTranslationX = defaultValue
             expectedFinishType = .closed
 
-        case (-CGFloat.infinity ... -item.view.bounds.width * 0.75, -CGFloat.infinity ... -maxActionsVisibleWidth, true):// full open
+        case (-CGFloat.infinity ... -item.view.bounds.width * 0.75, direction == .leftToRight ? -CGFloat.infinity ... -maxActionsVisibleWidth : maxActionsVisibleWidth ... CGFloat.infinity, true):// full open
             if finishType != .fullOpen {
                 if #available(iOS 10.0, *) {
                     hapticGenerator?.impactOccurred()
@@ -142,14 +142,14 @@ class SwipableCellLayouter {
             }
             expectedFinishType = .fullOpen
 
-        case (_, -CGFloat.infinity ... -maxActionsVisibleWidth, true):// open with bounce
+        case (_, direction == .leftToRight ? -CGFloat.infinity ... -maxActionsVisibleWidth : maxActionsVisibleWidth ... CGFloat.infinity, true):// open with bounce
             cellTranslationX = directionFactor * easeOut(value: swipePosition,
                                                          startValue: -maxActionsVisibleWidth,
                                                          endValue: -item.view.bounds.width,
                                                          asymptote: -maxActionsVisibleWidth + -item.view.bounds.width / 6)
             expectedFinishType = .open
 
-        case (_, -maxActionsVisibleWidth ... 0, true): // open
+        case (_, direction == .leftToRight ? -maxActionsVisibleWidth ... 0 : 0 ... maxActionsVisibleWidth, true): // open
             cellTranslationX = defaultValue
             expectedFinishType = .open
 
