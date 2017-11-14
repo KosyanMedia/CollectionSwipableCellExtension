@@ -12,11 +12,16 @@ class CollectionSwipableCellHandler: NSObject {
 
     weak var delegate: CollectionSwipableCellExtensionDelegate?
 
-    fileprivate let recognizer = UIPanGestureRecognizer()
-    fileprivate let tapRecognizer = UITapGestureRecognizer()
-    fileprivate let direction: UIUserInterfaceLayoutDirection
-    fileprivate var layouterInProgress: SwipableCellLayouter?
-    fileprivate let collection: SwipableActionsCollection
+    private let recognizer = UIPanGestureRecognizer()
+    private let tapRecognizer = UITapGestureRecognizer()
+    private let direction: UIUserInterfaceLayoutDirection
+    private var layouterInProgress: SwipableCellLayouter? {
+        didSet {
+            observeViewInProgress()
+        }
+    }
+    private var layouterViewObservation: NSKeyValueObservation?
+    private let collection: SwipableActionsCollection
 
     init(collection: SwipableActionsCollection, direction: UIUserInterfaceLayoutDirection) {
         self.collection = collection
@@ -32,7 +37,7 @@ class CollectionSwipableCellHandler: NSObject {
     }
 
     deinit {
-        layouterInProgress?.closeActions()
+        layouterInProgress?.closeAndRemoveActions(animated: false)
     }
 
     func applyToCollection() {
@@ -51,12 +56,12 @@ class CollectionSwipableCellHandler: NSObject {
     }
 
     func closeCellInProgress() {
-        layouterInProgress?.closeActions()
+        layouterInProgress?.closeAndRemoveActions(animated: true)
 
         layouterInProgress = nil
     }
 
-    fileprivate var directionFactor: CGFloat {
+    private var directionFactor: CGFloat {
         return direction == .leftToRight ? 1 : -1
     }
 
@@ -69,7 +74,7 @@ class CollectionSwipableCellHandler: NSObject {
             if let swipedIndexPath = swipedIndexPath,
                 let newItem = collection.item(at: swipedIndexPath) {
                 if newItem.view != layouterInProgress?.item.view {
-                    layouterInProgress?.closeActions()
+                    layouterInProgress?.closeAndRemoveActions(animated: true)
                     let layout = delegate?.swipableActionsLayout(forItemAt: swipedIndexPath)
                     layouterInProgress = SwipableCellLayouter(item: newItem, layout: layout, direction: direction)
                 }
@@ -107,6 +112,30 @@ class CollectionSwipableCellHandler: NSObject {
 
     @objc func overlayGestureRecognizerAction(_ recognizer: UIGestureRecognizer) {
         closeCellInProgress()
+    }
+
+    private func observeViewInProgress() {
+        guard let layouterInProgress = layouterInProgress else {
+            return
+        }
+
+        layouterViewObservation?.invalidate()
+
+        // observe cell reusing
+        layouterViewObservation = layouterInProgress.item.view.observe(\.frame) { [weak self] (view, change) in
+            self?.checkViewInProgress()
+        }
+    }
+
+    private func checkViewInProgress() {
+        guard let item = layouterInProgress?.item else {
+            return
+        }
+
+        if collection.item(at: item.indexPath)?.view != item.view {
+            layouterInProgress?.closeAndRemoveActions(animated: false)
+            layouterInProgress = nil
+        }
     }
 
 }

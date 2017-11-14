@@ -25,7 +25,7 @@ class SwipableUITableView: SwipableActionsCollection {
 
     func item(at indexPath: IndexPath) -> SwipableActionsItem? {
         if let cell = tableView.cellForRow(at: indexPath) {
-            return SwipableItemForUITableView(cell: cell)
+            return SwipableItemForUITableView(cell: cell, onIndexPath: indexPath)
         }
 
         return nil
@@ -37,10 +37,12 @@ class SwipableItemForUITableView: SwipableActionsItem {
 
     let view: UIView
     let contentView: UIView
+    let indexPath: IndexPath
 
-    init(cell: UITableViewCell) {
+    init(cell: UITableViewCell, onIndexPath indexPath: IndexPath) {
         self.view = cell
         self.contentView = cell.contentView
+        self.indexPath = indexPath
     }
 
 }

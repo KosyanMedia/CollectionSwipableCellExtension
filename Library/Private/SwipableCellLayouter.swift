@@ -82,9 +82,13 @@ class SwipableCellLayouter {
         removeButtonsFromCell()
     }
 
-    func closeActions() {
-        performFinishAnimation(toValue: 0) {
-            self.removeButtonsFromCell()
+    func closeAndRemoveActions(animated: Bool) {
+        if animated {
+            performFinishAnimation(toValue: 0) {
+                self.removeButtonsFromCell()
+            }
+        } else {
+            removeButtonsFromCell()
         }
     }
 
