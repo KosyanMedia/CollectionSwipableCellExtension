@@ -38,6 +38,9 @@ class CollectionSwipableCellHandler: NSObject {
 
     deinit {
         layouterInProgress?.closeAndRemoveActions(animated: false)
+
+        layouterViewObservation?.invalidate()
+        layouterViewObservation = nil
     }
 
     func applyToCollection() {
