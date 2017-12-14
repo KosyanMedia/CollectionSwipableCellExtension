@@ -16,6 +16,10 @@ class SwipableCellLayouter {
 
     let item: SwipableActionsItem
 
+    var actionsAreClosed: Bool {
+        return cellTranslationX == 0
+    }
+
     private let layout: CollectionSwipableCellLayout?
 
     private var wrapperView: UIView?
@@ -121,12 +125,30 @@ class SwipableCellLayouter {
         swipeIsFinished = true
     }
 
+    private var isOpeningDirectionPreviousValue = false
+
     private func onSwipe(prevValue: CGFloat) {
-        let isOpeningDirection = swipePosition <= prevValue
+        let isOpeningDirection: Bool
+        if swipePosition < prevValue {
+            isOpeningDirection = true
+        } else if swipePosition == prevValue {
+            isOpeningDirection = isOpeningDirectionPreviousValue
+        } else {
+            isOpeningDirection = false
+        }
+        isOpeningDirectionPreviousValue = isOpeningDirection
+
         let defaultValue = swipePosition * directionFactor
         let expectedFinishType: FinishAnimationType
 
         switch (swipePosition, cellTranslationX, isOpeningDirection) {
+        case (_, direction == .leftToRight ? 0 ... CGFloat.infinity : -CGFloat.infinity ... 0, false): // opposite bounce
+            cellTranslationX = directionFactor * easeOut(value: swipePosition,
+                                                         startValue: 0,
+                                                         endValue: item.view.bounds.width,
+                                                         asymptote: item.view.bounds.width / 6)
+            expectedFinishType = .closed
+
         case (_, _, false): // close
             cellTranslationX = defaultValue
             expectedFinishType = .closed

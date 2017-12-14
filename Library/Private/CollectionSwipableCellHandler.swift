@@ -162,7 +162,7 @@ extension CollectionSwipableCellHandler: UIGestureRecognizerDelegate {
                 delegate?.isSwipable(itemAt: swipedIndexPath) == true,
                 let item = collection.item(at: swipedIndexPath) {
 
-                if item.view === layouterInProgress?.item.view {
+                if item.view === layouterInProgress?.item.view && layouterInProgress?.actionsAreClosed == false {
                     return true
                 }
 
