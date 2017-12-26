@@ -41,6 +41,8 @@ class CollectionSwipableCellHandler: NSObject {
 
         layouterViewObservation?.invalidate()
         layouterViewObservation = nil
+
+        savedForObservationItemView = nil
     }
 
     func applyToCollection() {
@@ -117,6 +119,8 @@ class CollectionSwipableCellHandler: NSObject {
         closeCellInProgress()
     }
 
+    private var savedForObservationItemView: UIView?
+
     private func observeViewInProgress() {
         guard let layouterInProgress = layouterInProgress else {
             return
@@ -125,6 +129,7 @@ class CollectionSwipableCellHandler: NSObject {
         layouterViewObservation?.invalidate()
 
         // observe cell reusing
+        savedForObservationItemView = layouterInProgress.item.view
         layouterViewObservation = layouterInProgress.item.view.observe(\.frame) { [weak self] (view, change) in
             self?.checkViewInProgress()
         }
