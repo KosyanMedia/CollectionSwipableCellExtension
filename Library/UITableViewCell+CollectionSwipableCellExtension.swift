@@ -12,6 +12,9 @@ private var kSwipableHandlerAssociatedKey = "swipableHandler"
 
 public extension UITableViewCell {
 
+    /**
+    * Call this method in tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath)
+    **/
     @objc public func resetSwipableActions() {
         swipableHandler?.removeCurrentLayouterBeforeCellReusing()
     }
