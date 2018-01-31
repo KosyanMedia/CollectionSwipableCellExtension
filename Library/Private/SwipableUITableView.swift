@@ -39,10 +39,17 @@ class SwipableItemForUITableView: SwipableActionsItem {
     let contentView: UIView
     let indexPath: IndexPath
 
+    private let cell: UITableViewCell
+
     init(cell: UITableViewCell, onIndexPath indexPath: IndexPath) {
         self.view = cell
+        self.cell = cell
         self.contentView = cell.contentView
         self.indexPath = indexPath
+    }
+
+    func setupHandler(_ handler: CollectionSwipableCellHandler) {
+        cell.swipableHandler = handler
     }
 
 }

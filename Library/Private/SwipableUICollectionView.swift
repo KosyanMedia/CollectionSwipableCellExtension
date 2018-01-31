@@ -39,10 +39,17 @@ class SwipableItemForUICollectionView: SwipableActionsItem {
     let contentView: UIView
     let indexPath: IndexPath
 
+    private let cell: UICollectionViewCell
+
     init(cell: UICollectionViewCell, onIndexPath indexPath: IndexPath) {
         self.view = cell
+        self.cell = cell
         self.contentView = cell.contentView
         self.indexPath = indexPath
+    }
+
+    func setupHandler(_ handler: CollectionSwipableCellHandler) {
+        cell.swipableHandler = handler
     }
 
 }

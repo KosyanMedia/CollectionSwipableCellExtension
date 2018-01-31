@@ -73,6 +73,9 @@ class SwipableCellLayouter {
 
     private let direction: UIUserInterfaceLayoutDirection
 
+    private var contentViewObservation: NSKeyValueObservation?
+    private var prevContentViewOrigin: CGPoint = CGPoint.zero
+
     init(item: SwipableActionsItem, layout: CollectionSwipableCellLayout?, direction: UIUserInterfaceLayoutDirection) {
         self.item = item
         self.layout = layout
@@ -80,9 +83,25 @@ class SwipableCellLayouter {
 
         maxActionsVisibleWidth = layout?.swipingAreaWidth() ?? kDefaultActionsWidth
         setupViews()
+
+        // prevent reset contentView frame before delete animation
+        contentViewObservation = item.contentView.observe(\.frame) { [weak self] (view, change) in
+            guard let `self` = self else {
+                return
+            }
+            if self.prevContentViewOrigin.x < 0 && view.frame.origin == CGPoint.zero {
+                var newFrame = view.frame
+                newFrame.origin = self.prevContentViewOrigin
+                view.frame = newFrame
+            }
+            self.prevContentViewOrigin = view.frame.origin
+        }
     }
 
     deinit {
+        contentViewObservation?.invalidate()
+        contentViewObservation = nil
+
         removeButtonsFromCell()
     }
 

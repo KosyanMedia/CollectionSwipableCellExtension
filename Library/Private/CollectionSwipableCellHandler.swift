@@ -15,12 +15,7 @@ class CollectionSwipableCellHandler: NSObject {
     private let recognizer = UIPanGestureRecognizer()
     private let tapRecognizer = UITapGestureRecognizer()
     private let direction: UIUserInterfaceLayoutDirection
-    private var layouterInProgress: SwipableCellLayouter? {
-        didSet {
-            observeViewInProgress()
-        }
-    }
-    private var layouterViewObservation: NSKeyValueObservation?
+    private var layouterInProgress: SwipableCellLayouter?
     private let collection: SwipableActionsCollection
 
     init(collection: SwipableActionsCollection, direction: UIUserInterfaceLayoutDirection) {
@@ -38,11 +33,6 @@ class CollectionSwipableCellHandler: NSObject {
 
     deinit {
         layouterInProgress?.closeAndRemoveActions(animated: false)
-
-        layouterViewObservation?.invalidate()
-        layouterViewObservation = nil
-
-        savedForObservationItemView = nil
     }
 
     func applyToCollection() {
@@ -82,6 +72,7 @@ class CollectionSwipableCellHandler: NSObject {
                     layouterInProgress?.closeAndRemoveActions(animated: true)
                     let layout = delegate?.swipableActionsLayout(forItemAt: swipedIndexPath)
                     layouterInProgress = SwipableCellLayouter(item: newItem, layout: layout, direction: direction)
+                    newItem.setupHandler(self)
                 }
             } else {
                 layouterInProgress = nil
@@ -119,31 +110,9 @@ class CollectionSwipableCellHandler: NSObject {
         closeCellInProgress()
     }
 
-    private var savedForObservationItemView: UIView?
-
-    private func observeViewInProgress() {
-        guard let layouterInProgress = layouterInProgress else {
-            return
-        }
-
-        layouterViewObservation?.invalidate()
-
-        // observe cell reusing
-        savedForObservationItemView = layouterInProgress.item.view
-        layouterViewObservation = layouterInProgress.item.view.observe(\.frame) { [weak self] (view, change) in
-            self?.checkViewInProgress()
-        }
-    }
-
-    private func checkViewInProgress() {
-        guard let item = layouterInProgress?.item else {
-            return
-        }
-
-        if collection.item(at: item.indexPath)?.view != item.view {
-            layouterInProgress?.closeAndRemoveActions(animated: false)
-            layouterInProgress = nil
-        }
+    internal func removeCurrentLayouterBeforeCellReusing() {
+        layouterInProgress?.closeAndRemoveActions(animated: false)
+        layouterInProgress = nil
     }
 
 }
