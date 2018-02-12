@@ -16,15 +16,15 @@ public extension UITableViewCell {
     * Call this method in tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath)
     **/
     @objc public func resetSwipableActions() {
-        swipableHandler?.removeCurrentLayouterBeforeCellReusing()
+        swipableHandlerWrapper?.handler?.removeCurrentLayouterBeforeCellReusing()
     }
 
-    internal weak var swipableHandler: CollectionSwipableCellHandler? {
+    internal var swipableHandlerWrapper: SwipableHandlerWrapper? {
         set {
-            objc_setAssociatedObject(self, &kSwipableHandlerAssociatedKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_ASSIGN)
+            objc_setAssociatedObject(self, &kSwipableHandlerAssociatedKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            return objc_getAssociatedObject(self, &kSwipableHandlerAssociatedKey) as? CollectionSwipableCellHandler
+            return objc_getAssociatedObject(self, &kSwipableHandlerAssociatedKey) as? SwipableHandlerWrapper
         }
     }
 

@@ -48,8 +48,8 @@ class SwipableItemForUITableView: SwipableActionsItem {
         self.indexPath = indexPath
     }
 
-    func setupHandler(_ handler: CollectionSwipableCellHandler) {
-        cell.swipableHandler = handler
+    func setupSwipableHandler(_ handler: CollectionSwipableCellHandler) {
+        cell.swipableHandlerWrapper = SwipableHandlerWrapper(handler: handler)
     }
 
 }

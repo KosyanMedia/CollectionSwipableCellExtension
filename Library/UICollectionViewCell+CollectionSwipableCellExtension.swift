@@ -16,15 +16,15 @@ public extension UICollectionViewCell {
      * Call this method in collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) of UICollectionViewDelegate of UITableViewDelegate
      **/
     @objc public func resetSwipableActions() {
-        swipableHandler?.removeCurrentLayouterBeforeCellReusing()
+        swipableHandlerWrapper?.handler?.removeCurrentLayouterBeforeCellReusing()
     }
 
-    internal weak var swipableHandler: CollectionSwipableCellHandler? {
+    internal var swipableHandlerWrapper: SwipableHandlerWrapper? {
         set {
-            objc_setAssociatedObject(self, &kSwipableHandlerAssociatedKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_ASSIGN)
+            objc_setAssociatedObject(self, &kSwipableHandlerAssociatedKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            return objc_getAssociatedObject(self, &kSwipableHandlerAssociatedKey) as? CollectionSwipableCellHandler
+            return objc_getAssociatedObject(self, &kSwipableHandlerAssociatedKey) as? SwipableHandlerWrapper
         }
     }
 

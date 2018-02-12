@@ -70,6 +70,16 @@ public class CollectionSwipableCellExtension: NSObject {
 
 }
 
+internal class SwipableHandlerWrapper {
+
+    private(set) weak var handler: CollectionSwipableCellHandler?
+
+    init(handler: CollectionSwipableCellHandler) {
+        self.handler = handler
+    }
+
+}
+
 private func isRtlLayoutDirection(of view: UIView) -> Bool {
     if #available(iOS 9.0, *) {
         return UIView.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft

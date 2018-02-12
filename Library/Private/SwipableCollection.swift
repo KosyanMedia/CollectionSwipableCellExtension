@@ -13,7 +13,7 @@ protocol SwipableActionsItem: class {
     var contentView: UIView { get }
     var indexPath: IndexPath { get }
 
-    func setupHandler(_ handler: CollectionSwipableCellHandler)
+    func setupSwipableHandler(_ handler: CollectionSwipableCellHandler)
 }
 
 protocol SwipableActionsCollection: class {

@@ -72,7 +72,7 @@ class CollectionSwipableCellHandler: NSObject {
                     layouterInProgress?.closeAndRemoveActions(animated: true)
                     let layout = delegate?.swipableActionsLayout(forItemAt: swipedIndexPath)
                     layouterInProgress = SwipableCellLayouter(item: newItem, layout: layout, direction: direction)
-                    newItem.setupHandler(self)
+                    newItem.setupSwipableHandler(self)
                 }
             } else {
                 layouterInProgress = nil
