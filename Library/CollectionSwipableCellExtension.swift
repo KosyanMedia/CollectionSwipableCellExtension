@@ -56,16 +56,46 @@ public class CollectionSwipableCellExtension: NSObject {
     public init(with collectionView: UICollectionView) {
         self.collection = SwipableUICollectionView(collectionView: collectionView)
         super.init()
+
+        startHandlingViewWindow()
     }
 
     @objc(initWithTableView:)
     public init(with tableView: UITableView) {
         self.collection = SwipableUITableView(tableView: tableView)
         super.init()
+
+        startHandlingViewWindow()
     }
 
     public func closeAllActions() {
         handler?.closeCellInProgress()
+    }
+
+    // MARK: Handle move out of window
+
+    private class AnchorView: UIView {
+
+        var emptyWindowHandler: (() -> (Void))?
+
+        override func willMove(toWindow newWindow: UIWindow?) {
+            super.willMove(toWindow: newWindow)
+
+            if let emptyWindowHandler = emptyWindowHandler, newWindow == nil {
+                emptyWindowHandler()
+            }
+        }
+
+    }
+
+    private func startHandlingViewWindow() {
+        let anchorView = AnchorView(frame: .zero)
+        anchorView.alpha = 0
+        anchorView.emptyWindowHandler = { [weak self] in
+            self?.closeAllActions()
+        }
+
+        collection.view.addSubview(anchorView)
     }
 
 }
