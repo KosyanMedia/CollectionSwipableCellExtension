@@ -11,6 +11,7 @@ import Foundation
 protocol SwipableActionsItem: class {
     var view: UIView { get }
     var contentView: UIView { get }
+    var linkedViews: [UIView] { get }
     var indexPath: IndexPath { get }
 
     func setupSwipableHandler(_ handler: CollectionSwipableCellHandler)

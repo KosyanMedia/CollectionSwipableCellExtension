@@ -65,8 +65,15 @@ class SwipableCellLayouter {
         set {
             if #available(iOS 9, *) {
                 item.contentView.frame.origin.x = newValue
+                item.linkedViews.forEach {
+                    $0.frame.origin.x = newValue
+                }
             } else {
-                item.contentView.transform = CGAffineTransform(translationX: newValue, y: 0)
+                let transform = CGAffineTransform(translationX: newValue, y: 0)
+                item.contentView.transform = transform
+                item.linkedViews.forEach {
+                    $0.transform = transform
+                }
             }
         }
     }

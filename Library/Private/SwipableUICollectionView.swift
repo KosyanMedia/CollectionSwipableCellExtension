@@ -39,6 +39,10 @@ class SwipableItemForUICollectionView: SwipableActionsItem {
     let contentView: UIView
     let indexPath: IndexPath
 
+    var linkedViews: [UIView] {
+        return [cell.backgroundView, cell.selectedBackgroundView].compactMap { $0 }
+    }
+
     private let cell: UICollectionViewCell
 
     init(cell: UICollectionViewCell, onIndexPath indexPath: IndexPath) {
