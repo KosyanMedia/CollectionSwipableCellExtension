@@ -234,7 +234,7 @@ class SwipableCellLayouter {
         if wrapperView == nil {
             let actionsViewWrapper = UIView(frame: item.view.bounds)
             actionsViewWrapper.tag = kActionsWrapperViewTag
-            actionsViewWrapper.clipsToBounds = true
+            actionsViewWrapper.clipsToBounds = false
             actionsViewWrapper.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             item.view.insertSubview(actionsViewWrapper, belowSubview: item.contentView)
 
