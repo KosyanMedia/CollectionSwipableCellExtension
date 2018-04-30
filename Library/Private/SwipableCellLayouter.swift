@@ -186,7 +186,8 @@ class SwipableCellLayouter {
 
         let sector: Sector
 
-        if oppositeBounceRange.contains(cellTranslationX) {
+        if oppositeBounceRange.contains(cellTranslationX) ||
+            swipePosition == 0 { // for case of closing from full open
             sector = .bounceClose
         } else if openBounceRange.contains(cellTranslationX) && !swipeFullOpenRange.contains(swipePosition) {
             sector = .bounceOpen
