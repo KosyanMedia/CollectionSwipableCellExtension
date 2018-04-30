@@ -10,7 +10,7 @@ import Foundation
 
 private let kActionsWrapperViewTag = 9
 private let kDefaultActionsWidth: CGFloat = 100
-private let kCompletionOffsetFactor: CGFloat = 0.05
+private let kCompletionOffsetFactor: CGFloat = 0.1
 
 class SwipableCellLayouter {
 
@@ -32,7 +32,7 @@ class SwipableCellLayouter {
 
     private var finishType: FinishAnimationType = .undefined
 
-    private let offsetCollector = OffsetCollector()
+    private var offsetCollector = OffsetCollector()
 
     private var hapticGeneratorObject: Any?
     @available(iOS 10.0, *)
@@ -153,6 +153,12 @@ class SwipableCellLayouter {
 
     private var isOpeningDirectionPreviousValue = false
 
+    enum Sector {
+        case undefined, fullOpen, bounceOpen, bounceClose
+    }
+
+    private var previousSector: Sector = .undefined
+
     private func onSwipe(prevValue: CGFloat) {
         let isOpeningDirection: Bool
         if swipePosition < prevValue {
@@ -165,65 +171,84 @@ class SwipableCellLayouter {
         isOpeningDirectionPreviousValue = isOpeningDirection
 
         let defaultValue = swipePosition * directionFactor
-        let expectedFinishType: FinishAnimationType
+        var expectedFinishType: (finishType: FinishAnimationType, collectOffset: Bool)
 
-        switch (swipePosition, cellTranslationX, isOpeningDirection) {
-        case (_, direction == .leftToRight ? 0 ... CGFloat.infinity : -CGFloat.infinity ... 0, false): // opposite bounce
-            cellTranslationX = directionFactor * easeOut(value: swipePosition,
-                                                         startValue: 0,
-                                                         endValue: item.view.bounds.width,
-                                                         asymptote: item.view.bounds.width / 6)
-            expectedFinishType = .closed
-
-        case (_, _, false): // close
-            cellTranslationX = defaultValue
-            expectedFinishType = .closed
-
-        case (-CGFloat.infinity ... -item.view.bounds.width * 0.75, direction == .leftToRight ? -CGFloat.infinity ... -maxActionsVisibleWidth : maxActionsVisibleWidth ... CGFloat.infinity, true):// full open
-            if finishType != .fullOpen {
-                if #available(iOS 10.0, *) {
-                    hapticGenerator?.impactOccurred()
-                }
-
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.cellTranslationX = defaultValue
-                    self.layoutActions()
-                })
-            } else {
-                cellTranslationX = defaultValue
-            }
-            expectedFinishType = .fullOpen
-
-        case (_, direction == .leftToRight ? -CGFloat.infinity ... -maxActionsVisibleWidth : maxActionsVisibleWidth ... CGFloat.infinity, true):// open with bounce
-            cellTranslationX = directionFactor * easeOut(value: swipePosition,
-                                                         startValue: -maxActionsVisibleWidth,
-                                                         endValue: -item.view.bounds.width,
-                                                         asymptote: -maxActionsVisibleWidth + -item.view.bounds.width / 6)
-            expectedFinishType = .open
-
-        case (_, direction == .leftToRight ? -maxActionsVisibleWidth ... 0 : 0 ... maxActionsVisibleWidth, true): // open
-            cellTranslationX = defaultValue
-            expectedFinishType = .open
-
-        default:
-            cellTranslationX = defaultValue
-            expectedFinishType = .closed
+        if isOpeningDirection {
+            expectedFinishType = (.open, true)
+        } else {
+            expectedFinishType = (.closed, true)
         }
 
-        layoutActions()
+        let oppositeBounceRange = direction == .leftToRight ? 0 ... CGFloat.infinity : -CGFloat.infinity ... 0
+        let openBounceRange = direction == .leftToRight ? -CGFloat.infinity ... -maxActionsVisibleWidth : maxActionsVisibleWidth ... CGFloat.infinity
 
-        offsetCollector.add(offset: abs(swipePosition - prevValue), for: expectedFinishType)
+        let swipeFullOpenRange = -CGFloat.infinity ... -item.view.bounds.width * 0.8
 
-        let limitOffset = item.view.bounds.width * kCompletionOffsetFactor
-        switch (expectedFinishType, offsetCollector.offset(for: expectedFinishType)) {
-        case (.fullOpen, _),
-             (.open, limitOffset ... CGFloat.infinity),
-             (.closed, limitOffset ... CGFloat.infinity):
-            finishType = expectedFinishType
-        default:
-            if finishType == .undefined {
-                finishType = .closed
+        let sector: Sector
+
+        if oppositeBounceRange.contains(cellTranslationX) {
+            sector = .bounceClose
+        } else if openBounceRange.contains(cellTranslationX) && !swipeFullOpenRange.contains(swipePosition) {
+            sector = .bounceOpen
+        } else if openBounceRange.contains(cellTranslationX) && swipeFullOpenRange.contains(swipePosition) {
+            sector = .fullOpen
+        } else {
+            sector = .undefined
+        }
+
+        let offsetValue: (value: CGFloat, animated: Bool)
+
+        if sector == .bounceClose {
+            offsetValue = (directionFactor * easeOut(value: swipePosition,
+                                                     startValue: 0,
+                                                     endValue: item.view.bounds.width,
+                                                     asymptote: item.view.bounds.width / 6), false)
+            expectedFinishType = (.closed, true)
+        } else if sector == .bounceOpen {
+            offsetValue = (directionFactor * easeOut(value: swipePosition,
+                                                     startValue: -maxActionsVisibleWidth,
+                                                     endValue: -item.view.bounds.width,
+                                                     asymptote: -maxActionsVisibleWidth + -item.view.bounds.width / 6), previousSector == .fullOpen)
+            expectedFinishType = (.open, previousSector != .fullOpen)
+        } else if sector == .fullOpen {
+            offsetValue = (defaultValue, previousSector != .fullOpen)
+            expectedFinishType = (.fullOpen, true)
+        } else {
+            offsetValue = (defaultValue, false)
+        }
+
+        previousSector = sector
+
+        if offsetValue.animated {
+            if #available(iOS 10.0, *) {
+                hapticGenerator?.impactOccurred()
             }
+            UIView.animate(withDuration: 0.2, animations: {
+                self.cellTranslationX = offsetValue.value
+                self.layoutActions()
+            })
+        } else {
+            cellTranslationX = offsetValue.value
+            layoutActions()
+        }
+
+        if expectedFinishType.collectOffset {
+            offsetCollector.add(offset: abs(swipePosition - prevValue), for: expectedFinishType.finishType)
+
+            let limitOffset = item.view.bounds.width * kCompletionOffsetFactor
+            switch (expectedFinishType.finishType, offsetCollector.offset(for: expectedFinishType.finishType)) {
+            case (.fullOpen, _),
+                 (.open, limitOffset ... CGFloat.infinity),
+                 (.closed, limitOffset ... CGFloat.infinity):
+                finishType = expectedFinishType.finishType
+            default:
+                if finishType == .undefined {
+                    finishType = .closed
+                }
+            }
+        } else {
+            finishType = expectedFinishType.finishType
+            offsetCollector = OffsetCollector()
         }
     }
 
