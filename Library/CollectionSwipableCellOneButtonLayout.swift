@@ -9,7 +9,6 @@
 import Foundation
 
 private let kButtonDefaultTitle = "Delete"
-private let kButtonDefaultBackgroundColor = UIColor.white
 
 @objcMembers
 open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCellLayout {
@@ -42,7 +41,6 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
         self.fullOpenInset = fullOpenInset
 
         button.setTitle(kButtonDefaultTitle, for: .normal)
-        button.setBackgroundImage(UIImage(color: kButtonDefaultBackgroundColor), for: .normal)
     }
 
     open func setupActionsView() {
