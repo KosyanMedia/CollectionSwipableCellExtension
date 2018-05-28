@@ -17,6 +17,7 @@
 		3AC443E82077BB8900A7D657 /* SwipableCellLayouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC443DF2077BB8900A7D657 /* SwipableCellLayouter.swift */; };
 		3AC443E92077BB8900A7D657 /* SwipableUICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC443E02077BB8900A7D657 /* SwipableUICollectionView.swift */; };
 		3AC443EA2077BB8900A7D657 /* CollectionSwipableCellHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC443E12077BB8900A7D657 /* CollectionSwipableCellHandler.swift */; };
+		8CC6437920BC812400272469 /* SwiftCompatibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6437820BC812400272469 /* SwiftCompatibility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		3AC443DF2077BB8900A7D657 /* SwipableCellLayouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipableCellLayouter.swift; sourceTree = "<group>"; };
 		3AC443E02077BB8900A7D657 /* SwipableUICollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipableUICollectionView.swift; sourceTree = "<group>"; };
 		3AC443E12077BB8900A7D657 /* CollectionSwipableCellHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionSwipableCellHandler.swift; sourceTree = "<group>"; };
+		8CC6437820BC812400272469 /* SwiftCompatibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCompatibility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				3AC443DF2077BB8900A7D657 /* SwipableCellLayouter.swift */,
 				3AC443E02077BB8900A7D657 /* SwipableUICollectionView.swift */,
 				3AC443E12077BB8900A7D657 /* CollectionSwipableCellHandler.swift */,
+				8CC6437820BC812400272469 /* SwiftCompatibility.swift */,
 			);
 			path = Private;
 			sourceTree = "<group>";
@@ -173,6 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CC6437920BC812400272469 /* SwiftCompatibility.swift in Sources */,
 				3AC443E72077BB8900A7D657 /* SwipableUITableView.swift in Sources */,
 				3AC443EA2077BB8900A7D657 /* CollectionSwipableCellHandler.swift in Sources */,
 				3AC443E32077BB8900A7D657 /* UITableViewCell+CollectionSwipableCellExtension.swift in Sources */,
