@@ -12,20 +12,25 @@ Carthage
 Using
 
 ```swift
-import CollectionSwipableCellExtension // import framework
+// import framework
+import CollectionSwipableCellExtension
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
 
-    private var swipableExtension: CollectionSwipableCellExtension? // make a strong reference
+    // make a strong reference
+    private var swipableExtension: CollectionSwipableCellExtension?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        swipableExtension = CollectionSwipableCellExtension(with: tableView) // initialize with UITableView or UICollectionView
-        swipableExtension?.delegate = self // set a delegate for telling whoch cells are swipable and set layout
-        swipableExtension?.isEnabled = true // enable/disable swiping functionality for all cells
+        // initialize with UITableView or UICollectionView
+        swipableExtension = CollectionSwipableCellExtension(with: tableView)
+        // set a delegate for telling whoch cells are swipable and set layout
+        swipableExtension?.delegate = self
+        // enable/disable swiping functionality for all cells
+        swipableExtension?.isEnabled = true
     }
 
 }
