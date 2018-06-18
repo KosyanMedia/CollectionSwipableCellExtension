@@ -11,6 +11,7 @@ Carthage
 
 Using
 
+```swift
     import CollectionSwipableCellExtension // import framework
 
     class ViewController: UIViewController {
@@ -47,4 +48,4 @@ Using
         }
 
     }
-
+```
