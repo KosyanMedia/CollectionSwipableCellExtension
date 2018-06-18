@@ -40,6 +40,10 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDelegate {
 
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.resetSwipableActions()
+    }
+
 }
 
 extension ViewController: UITableViewDataSource {
@@ -77,11 +81,5 @@ extension ViewController: CollectionSwipableCellExtensionDelegate {
 class TableCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-        resetSwipableActions()
-    }
 
 }
