@@ -10,3 +10,39 @@ Install
 Carthage
 
 Using
+
+    import CollectionSwipableCellExtension
+
+    class ViewController: UIViewController {
+
+        @IBOutlet weak var tableView: UITableView!
+
+        private var swipableExtension: CollectionSwipableCellExtension?
+
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            swipableExtension = CollectionSwipableCellExtension(with: tableView)
+            swipableExtension?.delegate = self
+            swipableExtension?.isEnabled = true
+        }
+
+    }
+
+    extension ViewController: CollectionSwipableCellExtensionDelegate {
+
+        func isSwipable(itemAt indexPath: IndexPath) -> Bool {
+            return true
+        }
+
+        func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout? {
+            let actionLayout = CollectionSwipableCellOneButtonLayout(buttonWidth: 100, insets: .zero, direction: .leftToRight)
+            actionLayout.action = { [weak self] in
+                self?.deleteCell(atIndexPath: indexPath)
+            }
+
+            return actionLayout
+        }
+
+    }
+
