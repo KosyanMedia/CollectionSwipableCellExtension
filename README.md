@@ -11,34 +11,36 @@ Carthage
 
 Using
 
-    import CollectionSwipableCellExtension
+    import CollectionSwipableCellExtension // import framework
 
     class ViewController: UIViewController {
 
         @IBOutlet weak var tableView: UITableView!
 
-        private var swipableExtension: CollectionSwipableCellExtension?
+        private var swipableExtension: CollectionSwipableCellExtension? // make a strong reference
 
         override func viewDidLoad() {
             super.viewDidLoad()
 
-            swipableExtension = CollectionSwipableCellExtension(with: tableView)
-            swipableExtension?.delegate = self
-            swipableExtension?.isEnabled = true
+            swipableExtension = CollectionSwipableCellExtension(with: tableView) // initialize with UITableView or UICollectionView
+            swipableExtension?.delegate = self // set a delegate for telling whoch cells are swipable and set layout
+            swipableExtension?.isEnabled = true // enable/disable swiping functionality for all cells
         }
 
     }
 
     extension ViewController: CollectionSwipableCellExtensionDelegate {
 
+        // tell that cell on indexPath is swipable
         func isSwipable(itemAt indexPath: IndexPath) -> Bool {
             return true
         }
 
+        // return swipable buttons layout, CollectionSwipableCellOneButtonLayout is default sample layout, you can make yourself
         func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout? {
             let actionLayout = CollectionSwipableCellOneButtonLayout(buttonWidth: 100, insets: .zero, direction: .leftToRight)
             actionLayout.action = { [weak self] in
-                self?.deleteCell(atIndexPath: indexPath)
+                //do something
             }
 
             return actionLayout
