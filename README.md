@@ -53,4 +53,13 @@ extension ViewController: CollectionSwipableCellExtensionDelegate {
     }
 
 }    
+
+extension ViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // you have to call this for preventing problems with cell's reuse
+        cell.resetSwipableActions()
+    }
+
+}
 ```
