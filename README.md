@@ -43,7 +43,7 @@ func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipable
 }
 ```
 
-Call resetSwipableActions() in order to exclude problems with cell's reuse.
+Call resetSwipableActions() in UITableViewDelegate in order to exclude problems with cell's reuse.
 
 ```swift
 func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -51,7 +51,7 @@ func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell,
 }
 ```
 
-or
+or UICollectionViewDelegate
 
 ```swift
 func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
