@@ -15,9 +15,8 @@ Requirements
 
 Using
 
-Initialize extension object and set delegate
-
-isEnabled property allow activate/deactivate functionality
+Initialize extension object with UITableView or UICollectionView and set a delegate.
+isEnabled property allows activate/deactivate functionality.
 
 ```swift
 swipableExtension = CollectionSwipableCellExtension(with: tableView)
@@ -25,15 +24,13 @@ swipableExtension?.delegate = self
 swipableExtension?.isEnabled = true
 ```
 
-Implement methods od CollectionSwipableCellExtensionDelegate protocol, which return layout for buttons and define which cells are swipeble.
+Implement methods of CollectionSwipableCellExtensionDelegate protocol, which return layout for buttons and define which cells are swipable.
 
 ```swift
-// tell that cell on indexPath is swipable
 func isSwipable(itemAt indexPath: IndexPath) -> Bool {
     return true
 }
 
-// return swipable buttons layout, CollectionSwipableCellOneButtonLayout is default sample layout, you can make yourself
 func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout? {
     let actionLayout = CollectionSwipableCellOneButtonLayout(buttonWidth: 100, insets: .zero, direction: .leftToRight)
     actionLayout.action = { [weak self] in
@@ -44,12 +41,22 @@ func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipable
 }
 ```
 
-Call resetSwipableActions() in order to solve problems with cell's reuse
+Call resetSwipableActions() in order to exclude problems with cell's reuse.
 
 ```swift
 func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     cell.resetSwipableActions()
 }
 ```
+
+or
+
+```swift
+func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    cell.resetSwipableActions()
+}
+```
+
+
 
 About layout customization
