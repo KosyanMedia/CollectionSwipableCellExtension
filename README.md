@@ -11,55 +11,39 @@ Carthage
 
 Using
 
+Initialize extension object and set delegate
+
+isEnabled property allow activate/deactivate functionality
+
 ```swift
-// import framework
-import CollectionSwipableCellExtension
+swipableExtension = CollectionSwipableCellExtension(with: tableView)
+swipableExtension?.delegate = self
+swipableExtension?.isEnabled = true
+```
 
-class ViewController: UIViewController {
+Implement methods od CollectionSwipableCellExtensionDelegate protocol, which return layout for buttons and define which cells are swipeble.
 
-    @IBOutlet weak var tableView: UITableView!
-
-    // make a strong reference
-    private var swipableExtension: CollectionSwipableCellExtension?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // initialize with UITableView or UICollectionView
-        swipableExtension = CollectionSwipableCellExtension(with: tableView)
-        // set a delegate for telling whoch cells are swipable and set layout
-        swipableExtension?.delegate = self
-        // enable/disable swiping functionality for all cells
-        swipableExtension?.isEnabled = true
-    }
-
+```swift
+// tell that cell on indexPath is swipable
+func isSwipable(itemAt indexPath: IndexPath) -> Bool {
+    return true
 }
 
-extension ViewController: CollectionSwipableCellExtensionDelegate {
-
-    // tell that cell on indexPath is swipable
-    func isSwipable(itemAt indexPath: IndexPath) -> Bool {
-        return true
+// return swipable buttons layout, CollectionSwipableCellOneButtonLayout is default sample layout, you can make yourself
+func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout? {
+    let actionLayout = CollectionSwipableCellOneButtonLayout(buttonWidth: 100, insets: .zero, direction: .leftToRight)
+    actionLayout.action = { [weak self] in
+        //do something
     }
 
-    // return swipable buttons layout, CollectionSwipableCellOneButtonLayout is default sample layout, you can make yourself
-    func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout? {
-        let actionLayout = CollectionSwipableCellOneButtonLayout(buttonWidth: 100, insets: .zero, direction: .leftToRight)
-        actionLayout.action = { [weak self] in
-            //do something
-        }
+    return actionLayout
+}
+```
 
-        return actionLayout
-    }
+Call resetSwipableActions() in order to solve problems with cell's reuse
 
-}    
-
-extension ViewController: UITableViewDelegate {
-
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        // you have to call this for preventing problems with cell's reuse
-        cell.resetSwipableActions()
-    }
-
+```swift
+func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    cell.resetSwipableActions()
 }
 ```
