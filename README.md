@@ -5,15 +5,15 @@ The extension for UICollectionView and UITableView which appends buttons to a ce
 It doesn’t require subclassing of cell class, it’s more useful for case when third-party cell already is used.
 The buttons UI is fully customised by providing own layout.
 
-Install
+## Install
 
-Carthage
+### Carthage
 
-cocoapods
+### cocoapods
 
-Requirements
+## Requirements
 
-Using
+## Using
 
 Initialize extension object with UITableView or UICollectionView and set a delegate.  
 isEnabled property allows activate/deactivate functionality.
@@ -59,4 +59,4 @@ func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: U
 
 
 
-About layout customization
+## About layout customization
