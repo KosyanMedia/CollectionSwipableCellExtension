@@ -9,6 +9,10 @@ Install
 
 Carthage
 
+cocoapods
+
+Requirements
+
 Using
 
 Initialize extension object and set delegate
@@ -47,3 +51,5 @@ func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell,
     cell.resetSwipableActions()
 }
 ```
+
+About layout customization
