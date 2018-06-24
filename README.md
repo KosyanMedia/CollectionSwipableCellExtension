@@ -5,6 +5,8 @@ The extension for UICollectionView and UITableView which appends buttons to a ce
 It doesn’t require subclassing of cell class, it’s more useful for case when third-party cell already is used.
 The buttons UI is fully customised by providing own layout.
 
+![Swipe to delete example](https://raw.githubusercontent.com/KosyanMedia/CollectionSwipableCellExtension/README/example/SwipeToDeleteExample.gif)
+
 ## Install
 
 ### Carthage
