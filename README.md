@@ -1,11 +1,11 @@
 # CollectionSwipableCellExtension
 
-The extension for UICollectionView and UITableView which appends buttons to a cell are shown on cell swiping.  
+It is the extension for UICollectionView and UITableView which appends buttons to a cell and shows them on cell swiping.  
    
 ### Features:  
 - swipe to delete gesture
-- doesn’t require subclassing of cell class, it’s more useful for case when third-party cell already is used.
-- the buttons UI is fully customised by providing own layout.
+- doesn’t require subclassing of cell class, it’s more useful in case when a third-party cell is already used.
+- the buttons UI are fully customised by providing own layout.
 - right-to-left languages support
 
 ![Swipe to delete example](https://raw.githubusercontent.com/KosyanMedia/CollectionSwipableCellExtension/README/example/SwipeToDeleteExample.gif)
@@ -19,8 +19,8 @@ github "KosyanMedia/CollectionSwipableCellExtension" ~> 0.0.1
 
 ## Using
 
-Initialize extension object with UITableView or UICollectionView and set a delegate.  
-isEnabled property allows activate/deactivate functionality.
+Initialize the extension object with UITableView or UICollectionView and set a delegate.  
+isEnabled property allows to activate/deactivate functionality.
 
 ```swift
 swipableExtension = CollectionSwipableCellExtension(with: tableView)
@@ -28,7 +28,7 @@ swipableExtension?.delegate = self
 swipableExtension?.isEnabled = true
 ```
 
-Implement methods of CollectionSwipableCellExtensionDelegate protocol, which return layout for buttons and define which cells are swipable.
+Implement methods of CollectionSwipableCellExtensionDelegate protocol, which returns a layout for buttons and defines what cells are swipable.
 
 ```swift
 func isSwipable(itemAt indexPath: IndexPath) -> Bool {
