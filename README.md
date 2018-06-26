@@ -15,8 +15,6 @@ The extension supports right-to-left languages.
 github "KosyanMedia/CollectionSwipableCellExtension" ~> 0.0.1
 ```
 
-## Requirements
-
 ## Using
 
 Initialize extension object with UITableView or UICollectionView and set a delegate.  
@@ -61,6 +59,7 @@ func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: U
 }
 ```
 
+## Layout customization
 
-
-## About layout customization
+We provide one simple layout CollectionSwipableCellOneButtonLayout. 
+You can customize it by subclassing or create your own layout which implements CollectionSwipableCellLayout protocol.
