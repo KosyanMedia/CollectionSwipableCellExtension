@@ -8,33 +8,81 @@
 
 import Foundation
 
+/**
+Layout of swipable buttons
+ **/
 @objc
 public protocol CollectionSwipableCellLayout: class {
+
+    /**
+     Container view for action buttons
+    **/
     var actionsView: UIView { get }
 
+    /**
+     Width of opened buttons
+    **/
     func swipingAreaWidth() -> CGFloat
+
+    /**
+     Swipable buttons inset for case when swipable area has some margin from cell's content
+     **/
     func swipingAreaInset() -> CGFloat
+
+    /**
+     Initialization of actionsView and its subviews
+     **/
     func setupActionsView()
+
+    /**
+     Method for set frames of action buttons
+     **/
     func layoutActionsView()
+
+    /**
+     Call after long swipe when swipable area is fully opened
+     **/
     func cellDidFullOpen()
+
+    /**
+     Use or not haptic feedback on full open
+     **/
     func hapticFeedbackIsEnabled() -> Bool
 }
 
+/**
+ Swipable extension delegate
+ **/
 @objc
 public protocol CollectionSwipableCellExtensionDelegate: class {
+
+    /**
+     Is needed show swipable buttons in cell on indexPath
+     **/
     func isSwipable(itemAt indexPath: IndexPath) -> Bool
+
+    /**
+     Return swipable buttons layout for cell on indexPath
+     **/
     func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout?
+
 }
 
 @objcMembers
 public class CollectionSwipableCellExtension: NSObject {
 
+    /**
+     Swipable extension delegate
+     **/
     public weak var delegate: CollectionSwipableCellExtensionDelegate? {
         didSet {
             handler?.delegate = delegate
         }
     }
 
+    /**
+     Enable/disable swipable functionality
+     **/
     public var isEnabled: Bool = false {
         didSet {
             if isEnabled {
@@ -52,6 +100,9 @@ public class CollectionSwipableCellExtension: NSObject {
     private let collection: SwipableActionsCollection
     private var handler: CollectionSwipableCellHandler?
 
+    /**
+     Initialization with UICollectionView
+     **/
     @objc(initWithCollectionView:)
     public init(with collectionView: UICollectionView) {
         self.collection = SwipableUICollectionView(collectionView: collectionView)
@@ -60,6 +111,9 @@ public class CollectionSwipableCellExtension: NSObject {
         startHandlingViewWindow()
     }
 
+    /**
+     Initialization with UITableView
+     **/
     @objc(initWithTableView:)
     public init(with tableView: UITableView) {
         self.collection = SwipableUITableView(tableView: tableView)
@@ -68,6 +122,9 @@ public class CollectionSwipableCellExtension: NSObject {
         startHandlingViewWindow()
     }
 
+    /**
+     Close opened actions
+     **/
     public func closeAllActions() {
         handler?.closeCellInProgress()
     }
