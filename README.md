@@ -2,7 +2,7 @@
 Swipable buttons for UICollectionView and UITableView
 
 The extension for UICollectionView and UITableView which appends buttons to a cell are shown on cell swiping.  
-- supports swipe to delete gesture
+- swipe to delete gesture
 - doesn’t require subclassing of cell class, it’s more useful for case when third-party cell already is used.
 - the buttons UI is fully customised by providing own layout.
 - right-to-left languages support
