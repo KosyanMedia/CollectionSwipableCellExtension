@@ -11,8 +11,9 @@ The extension supports right-to-left languages.
 ## Install
 
 ### Carthage
-
-### cocoapods
+```
+github "KosyanMedia/CollectionSwipableCellExtension" ~> 0.0.1
+```
 
 ## Requirements
 
