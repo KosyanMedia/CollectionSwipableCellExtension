@@ -10,6 +10,9 @@ import Foundation
 
 private let kButtonDefaultTitle = "Delete"
 
+/**
+ Simple layout with one swipable button
+ **/
 @objcMembers
 open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCellLayout {
 
