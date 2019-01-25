@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'CollectionSwipableCellExtension'
-  s.version = '0.0.2'
+  s.version = '0.0.3'
   s.license = 'MIT'
   s.summary = 'It is the extension for UICollectionView and UITableView which appends buttons to a cell and shows them on cell swiping.'
   s.homepage = 'https://github.com/KosyanMedia/CollectionSwipableCellExtension'

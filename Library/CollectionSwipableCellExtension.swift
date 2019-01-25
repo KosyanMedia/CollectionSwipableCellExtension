@@ -9,19 +9,19 @@
 import Foundation
 
 /**
-Layout of swipable buttons
+ Layout of swipable buttons
  **/
 @objc
 public protocol CollectionSwipableCellLayout: class {
 
     /**
      Container view for action buttons
-    **/
+     **/
     var actionsView: UIView { get }
 
     /**
      Width of opened buttons
-    **/
+     **/
     func swipingAreaWidth() -> CGFloat
 
     /**
@@ -122,13 +122,6 @@ public class CollectionSwipableCellExtension: NSObject {
         startHandlingViewWindow()
     }
 
-    /**
-     Close opened actions
-     **/
-    public func closeAllActions() {
-        handler?.closeCellInProgress()
-    }
-
     // MARK: Handle move out of window
 
     private class AnchorView: UIView {
@@ -155,6 +148,35 @@ public class CollectionSwipableCellExtension: NSObject {
         collection.view.addSubview(anchorView)
     }
 
+}
+
+// MARK: Public methods for programmatic control
+
+public extension CollectionSwipableCellExtension {
+
+    /**
+     Open actions for cell at specified index path
+     **/
+    @objc
+    public func openActionsForCell(at indexPath: IndexPath, animated: Bool = true) {
+        handler?.openActionsForCell(at: indexPath, animated: animated)
+    }
+
+    /**
+     Open actions for cell at specified index path with specified width
+     **/
+    @objc
+    public func openActionsForCell(at indexPath: IndexPath, visibleWidth: CGFloat, animated: Bool = true) {
+        handler?.openActionsForCell(at: indexPath, customVisibleWidth: visibleWidth, animated: animated)
+    }
+
+    /**
+     Close opened actions
+     **/
+    @objc
+    public func closeAllActions(animated: Bool = true) {
+        handler?.closeCellInProgress(animated: animated)
+    }
 }
 
 internal class SwipableHandlerWrapper {
