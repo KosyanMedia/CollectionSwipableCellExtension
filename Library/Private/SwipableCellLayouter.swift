@@ -112,6 +112,17 @@ class SwipableCellLayouter {
         removeButtonsFromCell()
     }
 
+    func open(customVisibleWidth: CGFloat? = nil, animated: Bool) {
+        let value = -(customVisibleWidth ?? maxActionsVisibleWidth)
+
+        if animated {
+            performFinishAnimation(toValue: value)
+        } else {
+            swipePosition = value
+            item.view.layoutIfNeeded()
+        }
+    }
+
     func closeAndRemoveActions(animated: Bool) {
         if animated {
             performFinishAnimation(toValue: 0) {
