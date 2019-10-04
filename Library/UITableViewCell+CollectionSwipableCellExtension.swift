@@ -15,7 +15,7 @@ public extension UITableViewCell {
     /**
     * Call this method in tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath)
     **/
-    @objc public func resetSwipableActions() {
+    @objc func resetSwipableActions() {
         swipableHandlerWrapper?.handler?.removeCurrentLayouterBeforeCellReusing()
     }
 

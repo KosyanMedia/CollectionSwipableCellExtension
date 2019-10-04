@@ -158,7 +158,7 @@ public extension CollectionSwipableCellExtension {
      Open actions for cell at specified index path
      **/
     @objc
-    public func openActionsForCell(at indexPath: IndexPath, animated: Bool = true) {
+    func openActionsForCell(at indexPath: IndexPath, animated: Bool = true) {
         handler?.openActionsForCell(at: indexPath, animated: animated)
     }
 
@@ -166,7 +166,7 @@ public extension CollectionSwipableCellExtension {
      Open actions for cell at specified index path with specified width
      **/
     @objc
-    public func openActionsForCell(at indexPath: IndexPath, visibleWidth: CGFloat, animated: Bool = true) {
+    func openActionsForCell(at indexPath: IndexPath, visibleWidth: CGFloat, animated: Bool = true) {
         handler?.openActionsForCell(at: indexPath, customVisibleWidth: visibleWidth, animated: animated)
     }
 
@@ -174,7 +174,7 @@ public extension CollectionSwipableCellExtension {
      Close opened actions
      **/
     @objc
-    public func closeAllActions(animated: Bool = true) {
+    func closeAllActions(animated: Bool = true) {
         handler?.closeCellInProgress(animated: animated)
     }
 }
