@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.authors = { 'KosyanMedia' => 'info@jetradar.com' }
   s.source = { :git => 'https://github.com/KosyanMedia/CollectionSwipableCellExtension.git', :tag => s.version }
 
-  s.swift_version = '4.2'
+  s.swift_version = '5'
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'Library/*.swift', 'Library/Private/*.swift'
