@@ -69,7 +69,7 @@ public protocol CollectionSwipableCellExtensionDelegate: AnyObject {
 }
 
 @objcMembers
-public class CollectionSwipableCellExtension: NSObject {
+public class CollectionSwipableCellExtensionKit: NSObject {
 
     /**
      Swipable extension delegate
@@ -152,7 +152,7 @@ public class CollectionSwipableCellExtension: NSObject {
 
 // MARK: Public methods for programmatic control
 
-public extension CollectionSwipableCellExtension {
+public extension CollectionSwipableCellExtensionKit {
 
     /**
      Open actions for cell at specified index path
