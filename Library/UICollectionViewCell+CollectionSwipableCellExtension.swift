@@ -21,10 +21,14 @@ public extension UICollectionViewCell {
 
     internal var swipableHandlerWrapper: SwipableHandlerWrapper? {
         set {
-            objc_setAssociatedObject(self, &kSwipableHandlerAssociatedKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            withUnsafePointer(to: &kSwipableHandlerAssociatedKey) {
+                objc_setAssociatedObject(self, $0, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
         }
         get {
-            return objc_getAssociatedObject(self, &kSwipableHandlerAssociatedKey) as? SwipableHandlerWrapper
+            withUnsafePointer(to: &kSwipableHandlerAssociatedKey) {
+                return objc_getAssociatedObject(self, $0) as? SwipableHandlerWrapper
+            }
         }
     }
 
