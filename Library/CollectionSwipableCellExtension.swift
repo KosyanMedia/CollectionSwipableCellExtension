@@ -32,6 +32,7 @@ public protocol CollectionSwipableCellLayout: AnyObject {
     /**
      Initialization of actionsView and its subviews
      **/
+    @MainActor
     func setupActionsView()
 
     /**

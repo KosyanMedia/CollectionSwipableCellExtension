@@ -89,7 +89,9 @@ class SwipableCellLayouter {
         self.direction = direction
 
         maxActionsVisibleWidth = layout?.swipingAreaWidth() ?? kDefaultActionsWidth
-        setupViews()
+        DispatchQueue.main.async {
+            self.setupViews()
+        }
 
         // prevent reset contentView frame before delete animation
         contentViewObservation = item.contentView.observe(\.frame) { [weak self] (view, change) in
@@ -272,6 +274,7 @@ class SwipableCellLayouter {
         }
     }
 
+    @MainActor
     private func setupViews() {
         wrapperView = item.view.viewWithTag(kActionsWrapperViewTag)
 
