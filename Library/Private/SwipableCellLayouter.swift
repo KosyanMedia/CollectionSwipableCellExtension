@@ -49,6 +49,7 @@ class SwipableCellLayouter {
         return hapticGeneratorObject as? UIImpactFeedbackGenerator
     }
 
+    @MainActor
     private var swipePosition: CGFloat = 0 {
         didSet {
             onSwipe(prevValue: oldValue)
@@ -98,21 +99,18 @@ class SwipableCellLayouter {
             guard let `self` = self else {
                 return
             }
-            Task { @MainActor in
-                if self.prevContentViewOrigin.x < 0 && view.frame.origin == CGPoint.zero {
-                    var newFrame = view.frame
-                    newFrame.origin = self.prevContentViewOrigin
-                    view.frame = newFrame
-                }
-                self.prevContentViewOrigin = view.frame.origin
+            if self.prevContentViewOrigin.x < 0 && view.frame.origin == CGPoint.zero {
+                var newFrame = view.frame
+                newFrame.origin = self.prevContentViewOrigin
+                view.frame = newFrame
             }
+            self.prevContentViewOrigin = view.frame.origin
         }
     }
 
     deinit {
         contentViewObservation?.invalidate()
         contentViewObservation = nil
-        removeButtonsFromCell()
     }
 
     @MainActor
@@ -177,6 +175,7 @@ class SwipableCellLayouter {
 
     private var previousSector: Sector = .undefined
 
+    @MainActor
     private func onSwipe(prevValue: CGFloat) {
         let isOpeningDirection: Bool
         if swipePosition < prevValue {
@@ -238,19 +237,15 @@ class SwipableCellLayouter {
 
         previousSector = sector
 
-        Task { @MainActor in
-            if offsetValue.animated {
-                if #available(iOS 10.0, *) {
-                    hapticGenerator?.impactOccurred()
-                }
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.cellTranslationX = offsetValue.value
-                    self.layoutActions()
-                })
-            } else {
-                cellTranslationX = offsetValue.value
-                layoutActions()
-            }
+        if offsetValue.animated {
+            hapticGenerator?.impactOccurred()
+            UIView.animate(withDuration: 0.2, animations: {
+                self.cellTranslationX = offsetValue.value
+                self.layoutActions()
+            })
+        } else {
+            cellTranslationX = offsetValue.value
+            layoutActions()
         }
 
         if expectedFinishType.collectOffset {
@@ -273,6 +268,7 @@ class SwipableCellLayouter {
         }
     }
 
+    @MainActor
     private func removeButtonsFromCell() {
         swipePosition = 0
 

@@ -85,6 +85,7 @@ class CollectionSwipableCellHandler: NSObject {
             if let swipedIndexPath = swipedIndexPath, collection.item(at: swipedIndexPath) != nil {
                 startNewLayouter(for: swipedIndexPath)
             } else {
+                layouterInProgress?.closeAndRemoveActions(animated: false)
                 layouterInProgress = nil
 
                 return
