@@ -12,6 +12,7 @@ import Foundation
  Layout of swipable buttons
  **/
 @objc
+@MainActor
 public protocol CollectionSwipableCellLayout: AnyObject {
 
     /**
@@ -32,7 +33,6 @@ public protocol CollectionSwipableCellLayout: AnyObject {
     /**
      Initialization of actionsView and its subviews
      **/
-    @MainActor
     func setupActionsView()
 
     /**
@@ -70,6 +70,7 @@ public protocol CollectionSwipableCellExtensionDelegate: AnyObject {
 }
 
 @objcMembers
+@MainActor
 public class CollectionSwipableCellExtension: NSObject {
 
     /**
