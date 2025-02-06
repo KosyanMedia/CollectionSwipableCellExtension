@@ -12,6 +12,7 @@ import Foundation
  Layout of swipable buttons
  **/
 @objc
+@MainActor
 public protocol CollectionSwipableCellLayout: AnyObject {
 
     /**
@@ -69,6 +70,7 @@ public protocol CollectionSwipableCellExtensionDelegate: AnyObject {
 }
 
 @objcMembers
+@MainActor
 public class CollectionSwipableCellExtension: NSObject {
 
     /**

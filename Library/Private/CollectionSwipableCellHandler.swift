@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 class CollectionSwipableCellHandler: NSObject {
 
     weak var delegate: CollectionSwipableCellExtensionDelegate?
@@ -32,7 +33,9 @@ class CollectionSwipableCellHandler: NSObject {
     }
 
     deinit {
-        layouterInProgress?.closeAndRemoveActions(animated: false)
+        Task { @MainActor [layouterInProgress] in
+            layouterInProgress?.closeAndRemoveActions(animated: false)
+        }
     }
 
     func applyToCollection() {
@@ -82,6 +85,7 @@ class CollectionSwipableCellHandler: NSObject {
             if let swipedIndexPath = swipedIndexPath, collection.item(at: swipedIndexPath) != nil {
                 startNewLayouter(for: swipedIndexPath)
             } else {
+                layouterInProgress?.closeAndRemoveActions(animated: false)
                 layouterInProgress = nil
 
                 return

@@ -36,6 +36,7 @@ class SwipableCellLayouter {
 
     private var hapticGeneratorObject: Any?
     @available(iOS 10.0, *)
+    @MainActor
     private var hapticGenerator: UIImpactFeedbackGenerator? {
         guard layout?.hapticFeedbackIsEnabled() == true else {
             return nil
@@ -48,6 +49,7 @@ class SwipableCellLayouter {
         return hapticGeneratorObject as? UIImpactFeedbackGenerator
     }
 
+    @MainActor
     private var swipePosition: CGFloat = 0 {
         didSet {
             onSwipe(prevValue: oldValue)
@@ -83,6 +85,7 @@ class SwipableCellLayouter {
     private var contentViewObservation: NSKeyValueObservation?
     private var prevContentViewOrigin: CGPoint = CGPoint.zero
 
+    @MainActor
     init(item: SwipableActionsItem, layout: CollectionSwipableCellLayout?, direction: UIUserInterfaceLayoutDirection) {
         self.item = item
         self.layout = layout
@@ -108,10 +111,9 @@ class SwipableCellLayouter {
     deinit {
         contentViewObservation?.invalidate()
         contentViewObservation = nil
-
-        removeButtonsFromCell()
     }
 
+    @MainActor
     func open(customVisibleWidth: CGFloat? = nil, animated: Bool) {
         let value = -(customVisibleWidth ?? maxActionsVisibleWidth)
 
@@ -123,6 +125,7 @@ class SwipableCellLayouter {
         }
     }
 
+    @MainActor
     func closeAndRemoveActions(animated: Bool) {
         if animated {
             performFinishAnimation(toValue: 0) {
@@ -133,6 +136,7 @@ class SwipableCellLayouter {
         }
     }
 
+    @MainActor
     func swipe(x: CGFloat) {
         if swipeIsFinished {
             originSwipePosition = swipePosition
@@ -145,6 +149,7 @@ class SwipableCellLayouter {
         swipeIsFinished = false
     }
 
+    @MainActor
     func swipeFinished() {
         switch finishType {
         case .fullOpen:
@@ -170,6 +175,7 @@ class SwipableCellLayouter {
 
     private var previousSector: Sector = .undefined
 
+    @MainActor
     private func onSwipe(prevValue: CGFloat) {
         let isOpeningDirection: Bool
         if swipePosition < prevValue {
@@ -232,9 +238,7 @@ class SwipableCellLayouter {
         previousSector = sector
 
         if offsetValue.animated {
-            if #available(iOS 10.0, *) {
-                hapticGenerator?.impactOccurred()
-            }
+            hapticGenerator?.impactOccurred()
             UIView.animate(withDuration: 0.2, animations: {
                 self.cellTranslationX = offsetValue.value
                 self.layoutActions()
@@ -264,6 +268,7 @@ class SwipableCellLayouter {
         }
     }
 
+    @MainActor
     private func removeButtonsFromCell() {
         swipePosition = 0
 
@@ -272,6 +277,7 @@ class SwipableCellLayouter {
         }
     }
 
+    @MainActor
     private func setupViews() {
         wrapperView = item.view.viewWithTag(kActionsWrapperViewTag)
 
@@ -298,6 +304,7 @@ class SwipableCellLayouter {
         }
     }
 
+    @MainActor
     private func layoutActions() {
         guard let containerView = containerView else {
             return
@@ -316,7 +323,8 @@ class SwipableCellLayouter {
         layout?.layoutActionsView()
     }
 
-    private func performFinishAnimation(toValue value: CGFloat, completion: (() -> Void)? = nil) {
+    @MainActor
+    private func performFinishAnimation(toValue value: CGFloat, completion: (@MainActor () -> Void)? = nil) {
         guard swipePosition != value else {
             completion?()
             return
@@ -367,6 +375,7 @@ class SwipableCellLayouter {
         }
     }
 
+    @MainActor
     private func swipeWidth() -> CGFloat {
         return item.view.bounds.width + (layout?.swipingAreaInset() ?? 0)
     }

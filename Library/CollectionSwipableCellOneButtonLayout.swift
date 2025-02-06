@@ -46,6 +46,7 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
         button.setTitle(kButtonDefaultTitle, for: .normal)
     }
 
+    @MainActor
     open func setupActionsView() {
         actionsView.autoresizingMask = [.flexibleLeftMargin, .flexibleHeight]
         actionsView.addSubview(button)
