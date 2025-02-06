@@ -49,7 +49,7 @@ extension ViewController: UITableViewDelegate {
 extension ViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cells.count
+        cells.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -64,7 +64,7 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: CollectionSwipableCellExtensionDelegate {
 
     func isSwipable(itemAt indexPath: IndexPath) -> Bool {
-        return true
+        true
     }
 
     func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout? {

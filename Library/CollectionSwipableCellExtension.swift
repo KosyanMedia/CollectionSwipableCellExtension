@@ -55,6 +55,7 @@ public protocol CollectionSwipableCellLayout: AnyObject {
  Swipable extension delegate
  **/
 @objc
+@MainActor
 public protocol CollectionSwipableCellExtensionDelegate: AnyObject {
 
     /**
@@ -191,11 +192,7 @@ internal class SwipableHandlerWrapper {
 
 }
 
+@MainActor
 private func isRtlLayoutDirection(of view: UIView) -> Bool {
-    if #available(iOS 9.0, *) {
-        return UIView.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft
-    } else {
-        let lang = Locale.current.languageCode
-        return NSLocale.characterDirection(forLanguage: lang!) == .rightToLeft
-    }
+    UIView.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft
 }

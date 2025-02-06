@@ -20,12 +20,13 @@ class SwipableUICollectionView: SwipableActionsCollection {
     }
 
     func indexPathForItem(at location: CGPoint) -> IndexPath? {
-        return collectionView.indexPathForItem(at: location)
+        collectionView.indexPathForItem(at: location)
     }
 
     func item(at indexPath: IndexPath) -> SwipableActionsItem? {
         if let cell = collectionView.cellForItem(at: indexPath) {
-            return SwipableItemForUICollectionView(cell: cell, onIndexPath: indexPath)
+            return SwipableItemForUICollectionView(
+                cell: cell, onIndexPath: indexPath)
         }
 
         return nil
@@ -40,7 +41,8 @@ class SwipableItemForUICollectionView: SwipableActionsItem {
     let indexPath: IndexPath
 
     var linkedViews: [UIView] {
-        return [cell.backgroundView, cell.selectedBackgroundView].compactMap { $0 }
+        [cell.backgroundView, cell.selectedBackgroundView]
+            .compactMap { $0 }
     }
 
     private let cell: UICollectionViewCell

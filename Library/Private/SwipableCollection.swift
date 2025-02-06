@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 protocol SwipableActionsItem: AnyObject {
     var view: UIView { get }
     var contentView: UIView { get }
@@ -17,6 +18,7 @@ protocol SwipableActionsItem: AnyObject {
     func setupSwipableHandler(_ handler: CollectionSwipableCellHandler)
 }
 
+@MainActor
 protocol SwipableActionsCollection: AnyObject {
     var view: UIView { get }
     func indexPathForItem(at location: CGPoint) -> IndexPath?
