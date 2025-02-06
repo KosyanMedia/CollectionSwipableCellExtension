@@ -8,7 +8,7 @@
 
 import UIKit
 
-private var kSwipableHandlerAssociatedKey = "swipableHandler"
+nonisolated(unsafe) private var kSwipableHandlerAssociatedKey = "swipableHandler"
 
 public extension UITableViewCell {
 
